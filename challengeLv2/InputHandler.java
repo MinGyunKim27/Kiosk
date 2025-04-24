@@ -1,4 +1,4 @@
-package challengeLv1;
+package challengeLv2;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

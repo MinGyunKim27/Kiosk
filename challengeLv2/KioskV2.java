@@ -1,4 +1,4 @@
-package challengeLv1;
+package challengeLv2;
 
 import java.util.List;
 import java.util.Scanner;
@@ -10,20 +10,49 @@ import java.util.Scanner;
  * - 해당 카테고리의 메뉴를 보여주고
  * - 주문을 진행하는 키오스크 로직
  */
-public class KioskV1 {
+public class KioskV2 {
 
+    public enum UserCase{
+        Case1 (0.9,"국가유공자",1),
+        Case2 (0.95,"군인",2),
+        Case3 (0.97,"학생",3),
+        Case4 (1.0,"일반",4);
 
-    private List<MenuItemV1> menuItems;      // 선택된 카테고리의 메뉴 아이템 목록
-    private final List<MenuV1> menus;        // 전체 메뉴 카테고리 목록
+        private final double percentage;
+        private final String userCase;
+        private final Integer Type;
+
+        UserCase(double percentage, String userCase,Integer Type) {
+            this.percentage = percentage;
+            this.userCase = userCase;
+            this.Type = Type;
+        }
+
+        public static double getPercentage(Integer Type){
+            for (UserCase uc : values()) {
+                if (uc.Type.equals(Type)) {
+                    return uc.percentage;
+                }
+            }
+            throw new RuntimeException();
+        }
+
+        public String getUserCase() {
+            return userCase;
+        }
+    }
+
+    private List<MenuItemV2> menuItems;      // 선택된 카테고리의 메뉴 아이템 목록
+    private final List<MenuV2> menus;        // 전체 메뉴 카테고리 목록
     InputHandler input = new InputHandler();
-    private CartList cartList;
+    private CartListLV2 cartList;
 
     // 생성자: 카테고리별 메뉴 리스트를 주입받음
-    public KioskV1(List<MenuV1> menus){
+    public KioskV2(List<MenuV2> menus){
         this.menus = menus;
     }
 
-    public void setShopList(CartList cartList) {
+    public void setShopList(CartListLV2 cartList) {
         this.cartList = cartList;
     }
 
@@ -63,7 +92,7 @@ public class KioskV1 {
                 return -1;
             } else {
                 // 메뉴 상세 정보 출력
-                MenuItemV1 selected = menuItems.get(menuNumber - 1);
+                MenuItemV2 selected = menuItems.get(menuNumber - 1);
                 System.out.printf("\n선택한 메뉴 : %s | %s | %s |\n", selected.getName(), selected.getPrice(), selected.getDescription());
 
                 // 확인 입력
@@ -94,7 +123,7 @@ public class KioskV1 {
     public void showMenus(){
         System.out.println("              [ Main MENU ]                  ");
         int sequenceMenu = 1;
-        for (MenuV1 menuTitle : menus){
+        for (MenuV2 menuTitle : menus){
             System.out.printf("%d. %-15s\n", sequenceMenu, menuTitle.getCategoryName());
             sequenceMenu ++;
         }
@@ -105,7 +134,7 @@ public class KioskV1 {
         System.out.printf("\n              [ %s MENU ]               \n",menus.get(categoryNumber-1).getCategoryName());
         int sequence = 1;
 
-        for (MenuItemV1 menu : menuItems){
+        for (MenuItemV2 menu : menuItems){
             System.out.printf("%d. %-15s  | %s | %s\n", sequence,menu.getName(),menu.getPrice(),menu.getDescription());
             sequence ++;
         }
@@ -114,16 +143,26 @@ public class KioskV1 {
 
     public int order(){
         System.out.println("아래와 같이 주문하시겠습니까?");
-        double sum = cartList.showAll();
+        double sum = cartList.showAllRefactored();
         int ans =  input.getInt("1. 주문     2. 메뉴판\n");
         if (ans == 1){
-            System.out.printf("주문이 완료되었습니다. 금액은 W %.1f 입니다.",sum);
+            double discountRate = discount();
+            System.out.printf("주문이 완료되었습니다. 금액은 W %.1f 입니다.",sum*discountRate);
             return -1;
         }
         return 0;
 
     }
 
+    public double discount(){
+        int discountType = input.getInt("할인 정보를 입력해주세요.\n" +
+                "1. 국가유공자 : 10% \n" +
+                "2. 군인     :  5%\n" +
+                "3. 학생     :  3%\n" +
+                "4. 일반     :  0%\n");
+        return UserCase.getPercentage(discountType);
+
+    }
 
 
 }

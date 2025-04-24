@@ -1,4 +1,4 @@
-package challengeLv1;
+package challengeLv2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,22 +9,22 @@ public class Main {
         Scanner sc = new Scanner(System.in);
 
         // 메뉴 카테고리 리스트 생성
-        List<MenuV1> menuList = new ArrayList<>();
+        List<MenuV2> menuList = new ArrayList<>();
 
 
 
         // 장바구니 리스트 생성
-        List<MenuItemV1> shopList = new ArrayList<>();
+        List<MenuItemV2> shopList = new ArrayList<>();
 
         // 장바구니 객체 생성
-        CartList cartList1 = new CartList();
+        CartListLV2 cartList1 = new CartListLV2();
 
         cartList1.setCartList(shopList);
 
         // 각 카테고리 객체 생성
-        MenuV1 hamburgers = new MenuV1();
-        MenuV1 drinks = new MenuV1();
-        MenuV1 desserts = new MenuV1();
+        MenuV2 hamburgers = new MenuV2();
+        MenuV2 drinks = new MenuV2();
+        MenuV2 desserts = new MenuV2();
 
         // 카테고리들을 전체 메뉴 리스트에 추가
         menuList.add(hamburgers);
@@ -32,45 +32,45 @@ public class Main {
         menuList.add(desserts);
 
         // 키오스크에 메뉴 리스트 전달
-        KioskV1 kiosk = new KioskV1(menuList);
+        KioskV2 kiosk = new KioskV2(menuList);
 
         // ===== 햄버거 메뉴 세팅 =====
-        MenuItemV1 cheeseburger = new MenuItemV1();
+        MenuItemV2 cheeseburger = new MenuItemV2();
         cheeseburger.setMenu("cheeseBurger", "W 7.5", "소고기 패티와, 치즈가 3장이나 들어간 버거!");
 
-        MenuItemV1 hamburger = new MenuItemV1();
+        MenuItemV2 hamburger = new MenuItemV2();
         hamburger.setMenu("Hamburger", "W 6.9", "풍성한 야채와 맛있는 소고기 패티가 들어간 기본 버거!");
 
-        MenuItemV1 mushroomBurger = new MenuItemV1();
+        MenuItemV2 mushroomBurger = new MenuItemV2();
         mushroomBurger.setMenu("mushroomBurger", "W 7.8", "특제 소스와 그릴로 구운 버섯이 틀어간 시그니처 버거!");
 
-        MenuItemV1 chickenBurger = new MenuItemV1();
+        MenuItemV2 chickenBurger = new MenuItemV2();
         chickenBurger.setMenu("ChickenBurger", "W 6.5", "치킨 패티가 들어간 매콤한 소스로 입안을 사로잡는 치킨 버거!");
 
         // ===== 음료 메뉴 세팅 =====
-        MenuItemV1 coke = new MenuItemV1();
+        MenuItemV2 coke = new MenuItemV2();
         coke.setMenu("Coke", "W 2.0", "톡 쏘는 탄산이 매력적인 코카콜라!");
 
-        MenuItemV1 sprite = new MenuItemV1();
+        MenuItemV2 sprite = new MenuItemV2();
         sprite.setMenu("Sprite", "W 2.0", "레몬향이 상큼한 스프라이트!");
 
-        MenuItemV1 orangeJuice = new MenuItemV1();
+        MenuItemV2 orangeJuice = new MenuItemV2();
         orangeJuice.setMenu("Orange Juice", "W 2.5", "신선한 오렌지를 그대로 담은 100% 오렌지 주스!");
 
-        MenuItemV1 icedTea = new MenuItemV1();
+        MenuItemV2 icedTea = new MenuItemV2();
         icedTea.setMenu("Iced Tea", "W 2.3", "달콤한 복숭아향이 나는 시원한 아이스티!");
 
         // ===== 디저트 메뉴 세팅 =====
-        MenuItemV1 vanillaIceCream = new MenuItemV1();
+        MenuItemV2 vanillaIceCream = new MenuItemV2();
         vanillaIceCream.setMenu("Vanilla Ice Cream", "W 1.8", "부드럽고 진한 바닐라 아이스크림!");
 
-        MenuItemV1 chocolateCake = new MenuItemV1();
+        MenuItemV2 chocolateCake = new MenuItemV2();
         chocolateCake.setMenu("Chocolate Cake", "W 3.0", "진한 초콜릿이 가득한 촉촉한 케이크!");
 
-        MenuItemV1 applePie = new MenuItemV1();
+        MenuItemV2 applePie = new MenuItemV2();
         applePie.setMenu("Apple Pie", "W 2.7", "따뜻한 사과 속이 들어간 바삭한 애플파이!");
 
-        MenuItemV1 churros = new MenuItemV1();
+        MenuItemV2 churros = new MenuItemV2();
         churros.setMenu("Churros", "W 2.5", "달콤한 시나몬 슈가가 뿌려진 바삭한 츄러스!");
 
         // ===== 각 카테고리에 메뉴 아이템 추가 =====
