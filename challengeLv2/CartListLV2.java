@@ -19,10 +19,24 @@ public class CartListLV2 {
         this.CartList = shopList1;
     }
 
-    public void deleteCartByName(String name) {
-        CartList = CartList.stream()
-                .filter(item -> !item.getName().equals(name))  // 해당 이름이 아닌 것만 필터링
-                .collect(Collectors.toList());
+    public int deleteCartByName(String name) {
+        List<String> deletedList = CartList.stream()
+                .map(MenuItemV2::getName)
+                .filter(itemName -> itemName.equals(name))
+                .toList();
+
+        if (deletedList.isEmpty()){
+            System.out.println("일치하는 메뉴 명이 없습니다!");
+            System.out.println("다시 입력하시오");
+            return 1;
+        }
+        else {
+            CartList = CartList.stream()
+                    .filter(item -> !item.getName().equals(name))  // 해당 이름이 아닌 것만 필터링
+                    .collect(Collectors.toList());
+            System.out.println("삭제되었습니다!");
+        }
+        return -1;
     }
 
     public boolean validateEmpty(){

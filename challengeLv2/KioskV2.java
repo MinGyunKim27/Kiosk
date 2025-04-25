@@ -144,11 +144,21 @@ public class KioskV2 {
     public int order(){
         System.out.println("아래와 같이 주문하시겠습니까?");
         double sum = cartList.showAllRefactored();
-        int ans =  input.getInt("1. 주문     2. 메뉴판\n");
+        int ans =  input.getInt("1. 주문     2. 메뉴판     3. 삭제\n");
         if (ans == 1){
             double discountRate = discount();
             System.out.printf("주문이 완료되었습니다. 금액은 W %.1f 입니다.",sum*discountRate);
             return -1;
+        } else if (ans == 3) {
+            int validate = 1;
+            while (validate == 1){
+                String deleteMenu = input.getString("삭제하고 싶은 메뉴 이름을 입력하시오 (삭제 취소 : 0) : ");
+                if (deleteMenu.equals("0")){
+                    break;
+                }
+                validate = cartList.deleteCartByName(deleteMenu);
+            }
+            return 0;
         }
         return 0;
 

@@ -16,7 +16,6 @@ public class KioskLV4 {
 
         showMenus();
 
-
         int categoryNumber = pickCategory();
         if (categoryNumber == -1){
             return -1;

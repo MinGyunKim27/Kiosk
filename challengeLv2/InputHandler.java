@@ -47,4 +47,18 @@ public class InputHandler {
             }
         }
     }
+
+    public String getString(String message) {
+        String input;
+        while (true) {
+            System.out.print(message); // 메시지 출력
+            try {
+                input = scanner.next(); // 사용자 입력 시도
+                return input;             // 정상 입력되면 반환
+            } catch (InputMismatchException e) {
+                System.out.println("잘못된 입력입니다. 숫자를 입력해주세요.");
+                scanner.nextLine(); // 입력 버퍼 비워서 다음 입력을 받기 위한 준비
+            }
+        }
+    }
 }
