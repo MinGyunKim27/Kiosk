@@ -147,4 +147,15 @@ Kiosk/
 ├── README.md
 └── .gitignore
 ```
+## 🛠 사용 기술
 
+- Java 17
+- Git & GitHub
+- IDE: IntelliJ IDEA
+- Java Enum, Stream API
+
+---
+
+## 💡 배운 점
+
+- ✅
