@@ -3,22 +3,13 @@ package challengeLv1;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * KioskLV5 클래스
- * - 메뉴 카테고리 목록을 출력하고
- * - 사용자 입력을 받아
- * - 해당 카테고리의 메뉴를 보여주고
- * - 주문을 진행하는 키오스크 로직
- */
 public class KioskV1 {
 
-
-    private List<MenuItemV1> menuItems;      // 선택된 카테고리의 메뉴 아이템 목록
-    private final List<MenuV1> menus;        // 전체 메뉴 카테고리 목록
+    private List<MenuItemV1> menuItems;
+    private final List<MenuV1> menus;
     InputHandler input = new InputHandler();
     private CartList cartList;
 
-    // 생성자: 카테고리별 메뉴 리스트를 주입받음
     public KioskV1(List<MenuV1> menus){
         this.menus = menus;
     }
@@ -27,103 +18,103 @@ public class KioskV1 {
         this.cartList = cartList;
     }
 
-    // 키오스크 메인 시작 메서드
     public int start(Scanner sc){
 
-        if (cartList.validateEmpty()){
+        boolean cartListBoolean = cartList.validateEmpty();
+
+        if (cartListBoolean){
             System.out.println("아래 메뉴판으로 보시고 메뉴를 골라 입력해주세요");
-        }
-
-        showMenus();
-
-        if (cartList.validateEmpty()){
+            showMainMenu();
             System.out.println("[ ORDER MENU ]\n" +
                     "4. Orders       | 장바구니를 확인 후 주문합니다.\n" +
                     "5. Cancel       | 진행중인 주문을 취소합니다.");
+        } else {
+            showMainMenu();
         }
 
-        // ===== 사용자로부터 카테고리 번호 입력 받기 =====
-        int categoryNumber = pickCategory();
+        int categoryNumber = selectCategory(!cartListBoolean);
 
         if (categoryNumber == 4){
-            return order();
+            return processOrder();
         }
 
-        // 선택한 카테고리의 메뉴 목록 불러오기
+        if (categoryNumber == 5){
+            return 0;
+        }
+
         menuItems = menus.get(categoryNumber - 1).getCategory();
 
-        // ===== 해당 카테고리 메뉴 선택 반복 =====
         while (true){
-            showMenuItems(categoryNumber);
+            showCategoryMenuItems(categoryNumber);
 
-            // 메뉴 번호 입력
-            int menuNumber = input.getInt("\n주문하려는 메뉴의 숫자를 입력하세요! : ");
+            int menuNumber = input.getIntInRange("\n주문하려는 메뉴의 숫자를 입력하세요! : ", 0, 4);
+
             if (menuNumber == 0){
-                System.out.println("프로그램이 종료됩니다.");
-                return -1;
+                System.out.println("처음으로 돌아갑니다.");
+                return 0;
             } else {
-                // 메뉴 상세 정보 출력
                 MenuItemV1 selected = menuItems.get(menuNumber - 1);
                 System.out.printf("\n선택한 메뉴 : %s | %s | %s |\n", selected.getName(), selected.getPrice(), selected.getDescription());
 
-                // 확인 입력
                 System.out.printf("\n| %s | %s | %s |\n위 메뉴를 장바구니에 추가하시겠습니까?\n", selected.getName(), selected.getPrice(), selected.getDescription());
-                if (input.getInt("1. 확인     2. 취소 \n") == 1){
-                    this.cartList.addCart(selected);
-                    System.out.printf("\n%s 이 장바구니에 추가되었습니다.\n\n",selected.getName());
-                    break; // 주문 완료 후 메뉴 반복 종료
+                if (input.getIntInRange("1. 확인     2. 취소 \n", 1, 2) == 1){
+                    cartList.addCart(selected);
+                    System.out.printf("\n%s 이 장바구니에 추가되었습니다.\n\n", selected.getName());
+                    break;
                 } else {
                     System.out.println("\n취소되었습니다.");
                 }
             }
         }
 
-        return 0; // 루프 종료 후 다시 메인 메뉴로 돌아갈 수 있도록
+        return 0;
     }
 
-    public int pickCategory(){
-        int categoryNumber = 0;
-        categoryNumber = input.getInt("주문하려는 카테고리를 고르세요!: ");
-        if (categoryNumber == 0){
-            System.out.println("프로그램이 종료됩니다.");
-            return -1;
+    public int selectCategory(boolean cart){
+        int categoryNumber;
+
+        if (cart){
+            categoryNumber = input.getIntInRange("주문하려는 카테고리를 고르세요!: ", 0, 3);
+        } else {
+            categoryNumber = input.getIntInRange("주문하려는 카테고리를 고르세요!: ", 0, 5);
         }
+
+        if (categoryNumber == 0){
+            System.out.println("처음으로 돌아갑니다!");
+            return 0;
+        }
+
         return categoryNumber;
     }
 
-    public void showMenus(){
+    public void showMainMenu(){
         System.out.println("              [ Main MENU ]                  ");
         int sequenceMenu = 1;
         for (MenuV1 menuTitle : menus){
-            System.out.printf("%d. %-15s\n", sequenceMenu, menuTitle.getCategoryName());
-            sequenceMenu ++;
+            System.out.printf("%d. %-18s\n", sequenceMenu, menuTitle.getCategoryName());
+            sequenceMenu++;
         }
         System.out.println("0. 종료.\n");
     }
 
-    public void showMenuItems(int categoryNumber){
-        System.out.printf("\n              [ %s MENU ]               \n",menus.get(categoryNumber-1).getCategoryName());
+    public void showCategoryMenuItems(int categoryNumber){
+        System.out.printf("\n              [ %s MENU ]               \n", menus.get(categoryNumber-1).getCategoryName());
         int sequence = 1;
-
         for (MenuItemV1 menu : menuItems){
-            System.out.printf("%d. %-15s  | %s | %s\n", sequence,menu.getName(),menu.getPrice(),menu.getDescription());
-            sequence ++;
+            System.out.printf("%d. %-18s  | %s | %s\n", sequence, menu.getName(), menu.getPrice(), menu.getDescription());
+            sequence++;
         }
         System.out.println("0. 뒤로가기");
     }
 
-    public int order(){
-        System.out.println("아래와 같이 주문하시겠습니까?");
+    public int processOrder(){
+        System.out.println("\n아래와 같이 주문하시겠습니까?\n\n");
         double sum = cartList.showAll();
-        int ans =  input.getInt("1. 주문     2. 메뉴판\n");
+        int ans = input.getIntInRange("1. 주문     2. 메뉴판\n", 1, 2);
         if (ans == 1){
-            System.out.printf("주문이 완료되었습니다. 금액은 W %.1f 입니다.",sum);
+            System.out.printf("주문이 완료되었습니다. 금액은 W %.1f 입니다.", sum);
             return -1;
         }
         return 0;
-
     }
-
-
-
 }

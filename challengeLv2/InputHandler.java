@@ -61,4 +61,14 @@ public class InputHandler {
             }
         }
     }
+
+    public int getIntInRange(String message, int min, int max) {
+        while (true) {
+            int input = getInt(message);
+            if (input >= min && input <= max) {
+                return input;
+            }
+            System.out.println(min + " ~ " + max + " 사이의 숫자를 다시 입력하세요.");
+        }
+    }
 }

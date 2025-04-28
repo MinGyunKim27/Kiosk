@@ -11,8 +11,6 @@ public class Main {
         // 메뉴 카테고리 리스트 생성
         List<MenuV1> menuList = new ArrayList<>();
 
-
-
         // 장바구니 리스트 생성
         List<MenuItemV1> shopList = new ArrayList<>();
 

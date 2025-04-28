@@ -30,17 +30,16 @@ public class CartList {
     public double showAll(){
         int sequence = 1;
         double sumOfAll = 0.0;
-        if (!CartList.isEmpty()){
-            System.out.println("[ Orders ]");
-            for (MenuItemV1 item: CartList){
-                System.out.printf("%d. %-15s  | %s | %s\n", sequence,item.getName(),item.getPrice(),item.getDescription());
-                sumOfAll +=  Double.parseDouble(item.getPrice().replace("W","").trim());
-                sequence ++;
-            }
-            System.out.println("\n[ Total ]");
-            System.out.printf("W %.1f\n",sumOfAll);
 
+        System.out.println("[ Orders ]");
+        for (MenuItemV1 item: CartList){
+            System.out.printf("%d. %-15s  | %s | %s\n", sequence,item.getName(),item.getPrice(),item.getDescription());
+            sumOfAll +=  Double.parseDouble(item.getPrice().replace("W","").trim());
+            sequence ++;
         }
+        System.out.println("\n[ Total ]");
+        System.out.printf("W %.1f\n",sumOfAll);
+
         return sumOfAll;
     }
 
