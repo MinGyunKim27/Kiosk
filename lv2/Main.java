@@ -31,7 +31,7 @@ public class Main {
         chickenBurger.price = "W 6.5";
         chickenBurger.description = "치킨 패티가 들어간 매콤한 소스로 입안을 사로잡는 치킨 버거!";
 
-        List<MenuItem> menuItems = new ArrayList<MenuItem>();
+        List<MenuItem> menuItems = new ArrayList<>();
         menuItems.add(cheeseburger);
         menuItems.add(chickenBurger);
         menuItems.add(mushroomBurger);

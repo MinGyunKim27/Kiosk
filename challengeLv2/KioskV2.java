@@ -9,66 +9,36 @@ public class KioskV2 {
     private static final int ORDER_MENU = 4;
     private static final int CANCEL_MENU = 5;
 
-    public enum UserCase {
-        Case1(0.9, "국가유공자", 1),
-        Case2(0.95, "군인", 2),
-        Case3(0.97, "학생", 3),
-        Case4(1.0, "일반", 4);
-
-        private final double percentage;
-        private final String userCase;
-        private final Integer type;
-
-        UserCase(double percentage, String userCase, Integer type) {
-            this.percentage = percentage;
-            this.userCase = userCase;
-            this.type = type;
-        }
-
-        public static double getPercentage(Integer type) {
-            for (UserCase uc : values()) {
-                if (uc.type.equals(type)) {
-                    return uc.percentage;
-                }
-            }
-            throw new IllegalArgumentException("잘못된 할인 타입입니다.");
-        }
-    }
-
+    // 선택된 카테고리의 메뉴 아이템 리스트
     private List<MenuItemV2> menuItems;
+
+    // 전체 메뉴 리스트
     private final List<MenuV2> menus;
+
+    // 사용자 입력 처리 객체
     private final InputHandler input = new InputHandler();
+
+    // 장바구니 객체
     private CartListLV2 cartList;
 
+    // 생성자: 메뉴 리스트 주입
     public KioskV2(List<MenuV2> menus) {
         this.menus = menus;
     }
 
+    // 장바구니 객체 주입
     public void setShopList(CartListLV2 cartList) {
         this.cartList = cartList;
     }
 
+    // 키오스크 실행 메인 메서드
     public int start(Scanner sc) {
-        if (cartList == null) {
-            throw new IllegalStateException("CartList가 설정되지 않았습니다.");
-        }
-
         boolean cartListBoolean = cartList.validateEmpty();
-
-        if (cartListBoolean) {
-            System.out.println("아래 메뉴판으로 보시고 메뉴를 골라 입력해주세요");
-        }
-
-        showMainMenu();
-
-        if (cartListBoolean) {
-            System.out.println("[ ORDER MENU ]\n" +
-                    ORDER_MENU + ". Orders       | 장바구니를 확인 후 주문합니다.\n" +
-                    CANCEL_MENU + ". Cancel       | 진행중인 주문을 취소합니다.");
-        }
+        showMainMenu(cartListBoolean);
 
         int categoryNumber = selectCategory(!cartListBoolean);
 
+        // 주문 또는 취소 처리
         if (cartListBoolean) {
             if (categoryNumber == ORDER_MENU) {
                 return processOrder();
@@ -78,12 +48,14 @@ public class KioskV2 {
             }
         }
 
+        // 카테고리 선택 → 메뉴 선택 단계로 진행
         menuItems = menus.get(categoryNumber - 1).getCategory();
         return handleMenuSelection(categoryNumber);
     }
 
+    // 카테고리 선택 처리
     public int selectCategory(boolean cart) {
-        int max = cart ? 3 : 5;
+        int max = cart ? 3 : 5;  // 장바구니 비어있으면 메뉴만, 있으면 주문/취소 포함
         int categoryNumber = input.getIntInRange("주문하려는 카테고리를 고르세요!: ", 0, max);
 
         if (categoryNumber == 0) {
@@ -92,16 +64,28 @@ public class KioskV2 {
         return categoryNumber;
     }
 
-    public void showMainMenu() {
-        System.out.println("              [ Main MENU ]                  ");
+    // 메인 메뉴 출력
+    public void showMainMenu(boolean cartList) {
+        if (cartList){
+            System.out.println("아래 메뉴판으로 보시고 메뉴를 골라 입력해주세요");
+        }
+
+        System.out.println("              [ Main MENUS ]                  ");
         int sequenceMenu = 1;
         for (MenuV2 menuTitle : menus) {
             System.out.printf("%d. %-15s\n", sequenceMenu, menuTitle.getCategoryName());
             sequenceMenu++;
         }
         System.out.println("0. 종료.\n");
+
+        if (cartList){
+            System.out.println("[ ORDER MENU ]\n" +
+                    ORDER_MENU + ". Orders       | 장바구니를 확인 후 주문합니다.\n" +
+                    CANCEL_MENU + ". Cancel       | 진행중인 주문을 취소합니다.");
+        }
     }
 
+    // 선택된 카테고리의 메뉴 아이템들 출력
     public void showCategoryMenuItems(int categoryNumber) {
         System.out.printf("\n              [ %s MENU ]               \n", menus.get(categoryNumber - 1).getCategoryName());
         int sequence = 1;
@@ -112,6 +96,7 @@ public class KioskV2 {
         System.out.println("0. 뒤로가기");
     }
 
+    // 주문 처리: 합계 계산, 할인 적용, 주문 확정
     public int processOrder() {
         System.out.println("\n아래와 같이 주문하시겠습니까?\n\n");
         double sum = cartList.showAllRefactored();
@@ -120,8 +105,9 @@ public class KioskV2 {
         if (ans == 1) {
             double discountRate = calculateDiscount();
             System.out.printf("주문이 완료되었습니다. 금액은 W %.1f 입니다.", sum * discountRate);
-            return -1;
+            return -1;  // 종료 신호
         } else if (ans == 3) {
+            // 메뉴 삭제 처리
             int validate = 1;
             while (validate == 1) {
                 String deleteMenu = input.getString("삭제하고 싶은 메뉴 이름을 입력하시오 (삭제 취소 : 0) : ");
@@ -130,11 +116,12 @@ public class KioskV2 {
                 }
                 validate = cartList.deleteCartByName(deleteMenu);
             }
-            return 0;
+            return 0;  // 초기 화면으로
         }
         return 0;
     }
 
+    // 카테고리 내 메뉴 선택 처리
     public int handleMenuSelection(int categoryNumber) {
         while (true) {
             showCategoryMenuItems(categoryNumber);
@@ -161,14 +148,15 @@ public class KioskV2 {
         return 0;
     }
 
+    // 할인율 계산
     public double calculateDiscount() {
         int discountType = input.getIntInRange("""
                 할인 정보를 입력해주세요.
-                1. 국가유공자 : 10% 
+                1. 국가유공자 : 10%\s
                 2. 군인     :  5%
                 3. 학생     :  3%
                 4. 일반     :  0%
-                """, 1, 4);
+               \s""", 1, 4);
 
         return UserCase.getPercentage(discountType);
     }

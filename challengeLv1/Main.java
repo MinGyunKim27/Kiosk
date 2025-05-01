@@ -101,5 +101,6 @@ public class Main {
                 break; // 사용자가 종료를 선택하면 루프 탈출
             }
         }
+        sc.close();
     }
 }

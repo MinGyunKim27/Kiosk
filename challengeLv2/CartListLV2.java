@@ -5,24 +5,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CartListLV2 {
-    private List<MenuItemV2> CartList = new ArrayList<>();
+    private List<MenuItemV2> cartList = new ArrayList<>();
 
     public void addCart(MenuItemV2 menuItem){
-        CartList.add(menuItem);
+        cartList.add(menuItem);
     }
 
     public List<MenuItemV2> getCartList() {
-        return CartList;
+        return cartList;
     }
 
     public void setCartList(List<MenuItemV2> shopList1){
-        this.CartList = shopList1;
+        this.cartList.addAll(shopList1);
     }
 
     public int deleteCartByName(String name) {
-        List<String> deletedList = CartList.stream()
+        List<String> deletedList = cartList.stream()
                 .map(MenuItemV2::getName)
-                .filter(itemName -> itemName.equals(name))
+                .filter(itemName -> itemName.equals(name.trim()))
                 .toList();
 
         if (deletedList.isEmpty()){
@@ -31,7 +31,7 @@ public class CartListLV2 {
             return 1;
         }
         else {
-            CartList = CartList.stream()
+            cartList = cartList.stream()
                     .filter(item -> !item.getName().equals(name))  // 해당 이름이 아닌 것만 필터링
                     .collect(Collectors.toList());
             System.out.println("삭제되었습니다!");
@@ -40,40 +40,23 @@ public class CartListLV2 {
     }
 
     public boolean validateEmpty(){
-        return !CartList.isEmpty();
-    }
-
-    public double showAll(){
-        int sequence = 1;
-        double sumOfAll = 0.0;
-        if (!CartList.isEmpty()){
-            System.out.println("[ Orders ]");
-            for (MenuItemV2 item: CartList){
-                System.out.printf("%d. %-15s  | %s | %s\n", sequence,item.getName(),item.getPrice(),item.getDescription());
-                sumOfAll +=  Double.parseDouble(item.getPrice().replace("W","").trim());
-                sequence ++;
-            }
-            System.out.println("\n[ Total ]");
-            System.out.printf("W %.1f\n",sumOfAll);
-
-        }
-        return sumOfAll;
+        return !cartList.isEmpty();
     }
 
     public double showAllRefactored() {
-        if (CartList.isEmpty()) {
+        if (cartList.isEmpty()) {
             return 0.0;
         }
 
         System.out.println("[ Orders ]");
 
         // 메뉴 출력
-        CartList.stream()
+        cartList.stream()
                 .forEach(item -> System.out.printf("%-15s  | %s | %s\n",
                         item.getName(), item.getPrice(), item.getDescription()));
 
         // 합계 계산
-        double sumOfAll = CartList.stream()
+        double sumOfAll = cartList.stream()
                 .mapToDouble(item -> Double.parseDouble(item.getPrice().replace("W", "").trim()))
                 .sum();
 

@@ -34,13 +34,13 @@ public class Main {
 
         // ===== 햄버거 메뉴 세팅 =====
         MenuItemV2 cheeseburger = new MenuItemV2();
-        cheeseburger.setMenu("cheeseBurger", "W 7.5", "소고기 패티와, 치즈가 3장이나 들어간 버거!");
+        cheeseburger.setMenu("CheeseBurger", "W 7.5", "소고기 패티와, 치즈가 3장이나 들어간 버거!");
 
         MenuItemV2 hamburger = new MenuItemV2();
         hamburger.setMenu("Hamburger", "W 6.9", "풍성한 야채와 맛있는 소고기 패티가 들어간 기본 버거!");
 
         MenuItemV2 mushroomBurger = new MenuItemV2();
-        mushroomBurger.setMenu("mushroomBurger", "W 7.8", "특제 소스와 그릴로 구운 버섯이 틀어간 시그니처 버거!");
+        mushroomBurger.setMenu("MushroomBurger", "W 7.8", "특제 소스와 그릴로 구운 버섯이 틀어간 시그니처 버거!");
 
         MenuItemV2 chickenBurger = new MenuItemV2();
         chickenBurger.setMenu("ChickenBurger", "W 6.5", "치킨 패티가 들어간 매콤한 소스로 입안을 사로잡는 치킨 버거!");
